@@ -52,6 +52,7 @@ async function fetchRecipe() {
 }
 
 async function showRecipe() {
+    try{
     let data = await fetchRecipe();
     
     data.recipes.forEach(recipe => {
@@ -89,6 +90,9 @@ async function showRecipe() {
         </article>`;
     }
     );
+}catch(error) {
+    console.log(error)
+}
 }
 
 //Eventlyssnare till knappen för Sök
