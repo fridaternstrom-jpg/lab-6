@@ -10,7 +10,7 @@ const searchButton = document.querySelector("#searchbutton");
 const searchInput = document.querySelector("#search");
 
 const recipeSection = document.querySelector("#recipe");
-const APIError = document.querySelector(".message");
+const APIError = document.querySelector("#message");
 
 
 let searchError = document.querySelector("#error");
@@ -38,33 +38,37 @@ async function fetchRecipe() {
     try {
         let recipeSearch = searchInput.value.trim();
 
-        const response = await fetch(`https://dummyjson.com/recipes/search?q=${recipeSearch}&limit=1`)
-        
+        const response = await fetch(`https://dummyjson.com/recipes/search?q=${recipeSearch}&limit=1`);
 
         const data = await response.json();
+
+        if (data.recipes.length === 0) {          //om data kommer tillbaka och inget recept hittats
+            throw new Error("Det fanns inga recept som matchade din sökning");
+        }
         return data;
     } catch (error) {
-        APIError.innerHTML = `Det gick inte bra: ${error}`; //inte detta heller
+        APIError.innerHTML = `${error.message}`;
     }
 }
 
 async function showRecipe() {
     let data = await fetchRecipe();
+    
     data.recipes.forEach(recipe => {
 
-//skapar tom lista för ingredienser
-let ingredientsList = "";
-recipe.ingredients.forEach(ingredient => {  //lägger till ingredienser var för sig, i li-element
-    ingredientsList += `<li>${ingredient}`;
-});
+        //skapar tom lista för ingredienser
+        let ingredientsList = "";
+        recipe.ingredients.forEach(ingredient => {  //lägger till ingredienser var för sig, i li-element
+            ingredientsList += `<li>${ingredient}`;
+        });
 
-//skapar tom lista för instruktioner
-let instructionList = "";
-recipe.instructions.forEach(instruction => {    //lägger till instruktioner var för sig, i li-element
-    instructionList += `<li>${instruction}</li>`;
-    });
+        //skapar tom lista för instruktioner
+        let instructionList = "";
+        recipe.instructions.forEach(instruction => {    //lägger till instruktioner var för sig, i li-element
+            instructionList += `<li>${instruction}</li>`;
+        });
 
-    //skriver ut till DOM
+        //skriver ut till DOM
         recipeSection.innerHTML += `
         <article>
         <h3>${recipe.name}</h3> 
@@ -84,7 +88,8 @@ recipe.instructions.forEach(instruction => {    //lägger till instruktioner var
         <ol>${instructionList}</ol>
         </article>`;
     }
-);}
+    );
+}
 
 //Eventlyssnare till knappen för Sök
 searchButton.addEventListener("click", function (event) { //vid klick, och stoppa omladdning
