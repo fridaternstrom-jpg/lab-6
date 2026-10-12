@@ -32,16 +32,19 @@ return true;
 
 
 
-async function fetchRecipes() {
-const response = await fetch('https://dummyjson.com/recipes/search')
+async function fetchRecipe() {
+
+let recipeSearch = searchInput.value.trim();
+
+const response = await fetch(`https://dummyjson.com/recipes/search?q=${recipeSearch}`)
 const data = await response.json();
 return data;
 }
 
 async function showRecipe() {
-    let data = await fetchRecipes();
+    let data = await fetchRecipe();
     data.recipes.forEach(recipe => {
-        console.log(recipe.name);
+        console.log(recipe);
     });
 }
 
@@ -54,13 +57,11 @@ async function showRecipe() {
 searchButton.addEventListener("click", function (event) {
     event.preventDefault();
     if (validateForm() === true) {
-        showInput(); //för test
+        fetchRecipe();
+        showRecipe();
     }
 });
 
 
-//bara för test
-function showInput(){
-    console.log(searchInput.value);
-}
+
 
