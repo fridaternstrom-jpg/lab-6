@@ -35,6 +35,9 @@ function validateForm() {
 
 
 async function fetchRecipe() {
+
+APIError.innerHTML = ""; //rensa tidigare felmeddelanden
+
     try {
         let recipeSearch = searchInput.value.trim();
 
@@ -48,11 +51,14 @@ async function fetchRecipe() {
         return data;
     } catch (error) {
         APIError.innerHTML = `${error.message}`;
+        console.log(error);
     }
 }
 
 async function showRecipe() {
-    try{
+
+    recipeSection.innerHTML =""; //rensa inför nästa sökning
+
     let data = await fetchRecipe();
     
     data.recipes.forEach(recipe => {
@@ -89,11 +95,7 @@ async function showRecipe() {
         <ol>${instructionList}</ol>
         </article>`;
     }
-    );
-}catch(error) {
-    console.log(error)
-}
-}
+    );}
 
 //Eventlyssnare till knappen för Sök
 searchButton.addEventListener("click", function (event) { //vid klick, och stoppa omladdning
