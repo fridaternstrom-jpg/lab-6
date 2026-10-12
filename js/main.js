@@ -20,6 +20,7 @@ let searchError = document.querySelector("#error");
  * @returns {boolean}
  */
 
+
 function validateForm() {
 
     //rensar felmeddelande inför varje validering av fält
@@ -33,16 +34,12 @@ function validateForm() {
 }
 
 
-
 async function fetchRecipe() {
     try {
         let recipeSearch = searchInput.value.trim();
 
-        const response = await fetch(`https://dummyjson.com/recipes/search?q=${recipeSearch}&limit=1`);
-
-        if (!response.ok) {
-            throw new Error("Något gick fel!"); //det här funkar inte än
-        }
+        const response = await fetch(`https://dummyjson.com/recipes/search?q=${recipeSearch}&limit=1`)
+        
 
         const data = await response.json();
         return data;
@@ -54,6 +51,20 @@ async function fetchRecipe() {
 async function showRecipe() {
     let data = await fetchRecipe();
     data.recipes.forEach(recipe => {
+
+//skapar tom lista för ingredienser
+let ingredientsList = "";
+recipe.ingredients.forEach(ingredient => {  //lägger till ingredienser var för sig, i li-element
+    ingredientsList += `<li>${ingredient}`;
+});
+
+//skapar tom lista för instruktioner
+let instructionList = "";
+recipe.instructions.forEach(instruction => {    //lägger till instruktioner var för sig, i li-element
+    instructionList += `<li>${instruction}</li>`;
+    });
+
+    //skriver ut till DOM
         recipeSection.innerHTML += `
         <article>
         <h3>${recipe.name}</h3> 
@@ -67,31 +78,19 @@ async function showRecipe() {
         </div>
 
         <h4>Ingredients</h4>
-        <ul>
-        </ul>
+        <ul>${ingredientsList}</ul>
 
-        
-    
-        
-        
-        
-        
-        
-        
+        <h4>Instructions</h4>
+        <ol>${instructionList}</ol>
         </article>`;
-    });
-}
+    }
+);}
 
-
-
-
-
-
-
-searchButton.addEventListener("click", function (event) {
+//Eventlyssnare till knappen för Sök
+searchButton.addEventListener("click", function (event) { //vid klick, och stoppa omladdning
     event.preventDefault();
-    if (validateForm() === true) {
-        fetchRecipe();
+    if (validateForm() === true) {      //kör validering av inmatning 
+        fetchRecipe();                  //kör funktioner
         showRecipe();
     }
 });
