@@ -30,10 +30,20 @@ searchError.innerHTML = "";
 return true;
 }
 
-function showInput(){
-    console.log(searchInput.value);
+
+
+async function fetchRecipes() {
+const response = await fetch('https://dummyjson.com/recipes/search')
+const data = await response.json();
+return data;
 }
 
+async function showRecipe() {
+    let data = await fetchRecipes();
+    data.recipes.forEach(recipe => {
+        console.log(recipe.name);
+    });
+}
 
 
 
@@ -44,9 +54,13 @@ function showInput(){
 searchButton.addEventListener("click", function (event) {
     event.preventDefault();
     if (validateForm() === true) {
-        showInput();
+        showInput(); //för test
     }
 });
 
 
+//bara för test
+function showInput(){
+    console.log(searchInput.value);
+}
 
