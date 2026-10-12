@@ -11,6 +11,8 @@ const searchInput = document.querySelector("#search");
 
 const recipeSection = document.querySelector("#recipe");
 
+
+
 let searchError = document.querySelector("#error");
 
 /**
@@ -33,10 +35,9 @@ return true;
 
 
 async function fetchRecipe() {
-
 let recipeSearch = searchInput.value.trim();
 
-const response = await fetch(`https://dummyjson.com/recipes/search?q=${recipeSearch}`)
+const response = await fetch(`https://dummyjson.com/recipes/search?q=${recipeSearch}&limit=1`)
 const data = await response.json();
 return data;
 }
@@ -44,7 +45,31 @@ return data;
 async function showRecipe() {
     let data = await fetchRecipe();
     data.recipes.forEach(recipe => {
-        console.log(recipe);
+        recipeSection.innerHTML += `
+        <article>
+        <h3>${recipe.name}</h3> 
+        <img src="${recipe.image}" alt="bild på din maträtt">
+
+        <div class="recipe-info">
+        <p><strong>Servings:</strong> ${recipe.servings}</p>
+        <p><strong>Prep time:</strong> ${recipe.prepTimeMinutes}</p>
+        <p><strong>Cooking time:</strong> ${recipe.cookTimeMinutes}</p>
+        <p><strong>Difficulty:</strong> ${recipe.difficulty}</p>
+        </div>
+
+        <h4>Ingredients</h4>
+        <ul>
+        </ul>
+
+        
+    
+        
+        
+        
+        
+        
+        
+        </article>`;
     });
 }
 
