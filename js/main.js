@@ -10,7 +10,7 @@ const searchButton = document.querySelector("#searchbutton");
 const searchInput = document.querySelector("#search");
 
 const recipeSection = document.querySelector("#recipe");
-
+const APIError = document.querySelector(".message");
 
 
 let searchError = document.querySelector("#error");
@@ -22,24 +22,33 @@ let searchError = document.querySelector("#error");
 
 function validateForm() {
 
-//rensar felmeddelande inför varje validering av fält
-searchError.innerHTML = "";
+    //rensar felmeddelande inför varje validering av fält
+    searchError.innerHTML = "";
 
     if (searchInput.value.trim() === "") {
         searchError.innerHTML = ("Du måste skriva något i sökfältet");
         return false;
     }
-return true;
+    return true;
 }
 
 
 
 async function fetchRecipe() {
-let recipeSearch = searchInput.value.trim();
+    try {
+        let recipeSearch = searchInput.value.trim();
 
-const response = await fetch(`https://dummyjson.com/recipes/search?q=${recipeSearch}&limit=1`)
-const data = await response.json();
-return data;
+        const response = await fetch(`https://dummyjson.com/recipes/search?q=${recipeSearch}&limit=1`);
+
+        if (!response.ok) {
+            throw new Error("Något gick fel!"); //det här funkar inte än
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        APIError.innerHTML = `Det gick inte bra: ${error}`; //inte detta heller
+    }
 }
 
 async function showRecipe() {
