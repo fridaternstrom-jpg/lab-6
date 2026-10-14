@@ -52,7 +52,7 @@ APIError.innerHTML = ""; //rensa tidigare felmeddelanden
         return data;
     } catch (error) {
         APIError.innerHTML = `${error.message}`; //lägger till felmeddelande i DOM
-        //console.log(error);
+        console.log(error);
     }
 }
 
