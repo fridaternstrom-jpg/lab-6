@@ -35,20 +35,25 @@ function validateForm() {
 //funktion för att hämta recept från rest-API
 async function fetchRecipe() {
 
-APIError.innerHTML = ""; //rensa tidigare felmeddelanden
+    APIError.innerHTML = ""; //rensa tidigare felmeddelanden
 
     try {
         let recipeSearch = searchInput.value.trim(); //skapar variabel för användarens inmatning
 
         const response = await fetch(
             `https://dummyjson.com/recipes/search?q=${recipeSearch}&limit=1`//hämtar recept efter användarens inmatning, max 1
-        ); 
+        );
+
+        if (!response.ok) {
+            throw new Error("Något gick fel vid inhämtning av data. Försök igen senare");
+        }
 
         const data = await response.json(); //omvandlar datan till json
 
         if (data.recipes.length === 0) {          //om data kommer tillbaka och inget recept hittats
             throw new Error("Det fanns inga recept som matchade din sökning");
         }
+
         return data;
     } catch (error) {
         APIError.innerHTML = `${error.message}`; //lägger till felmeddelande i DOM
@@ -58,14 +63,14 @@ APIError.innerHTML = ""; //rensa tidigare felmeddelanden
 
 async function showRecipe() { //funktion för att visa receptet som hittades på sidan
 
-    recipeSection.innerHTML =""; //rensa inför nästa sökning
+    recipeSection.innerHTML = ""; //rensa inför nästa sökning
 
     let data = await fetchRecipe(); //inväntar att vi hittar ett recept
-    
-if (data === undefined ) {  //förhindra felmeddelande i konsollen om inget recept hittades
-    console.log("Kör inte resten av koden om inget recept hittades");
-    return;
-}
+
+    if (data === undefined) {  //förhindra felmeddelande i konsollen om inget recept hittades
+        console.log("Kör inte resten av koden om inget recept hittades");
+        return;
+    }
 
 
     data.recipes.forEach(recipe => {
@@ -102,7 +107,8 @@ if (data === undefined ) {  //förhindra felmeddelande i konsollen om inget rece
         <ol>${instructionList}</ol>
         </article>`;
     }
-    );}
+    );
+}
 
 //Eventlyssnare till knappen för Sök
 searchButton.addEventListener("click", function (event) { //vid klick, och stoppa omladdning
