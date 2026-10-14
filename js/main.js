@@ -25,7 +25,7 @@ function validateForm() {
     //rensar felmeddelande inför varje validering av fält
     searchError.innerHTML = "";
 
-    if (searchInput.value.trim() === "") {
+    if (searchInput.value.trim() === "") { //Om användaren inte matar in något i sökfältet
         searchError.innerHTML = ("Du måste skriva något i sökfältet");
         return false;
     }
@@ -34,7 +34,7 @@ function validateForm() {
 
 //funktion för att hämta recept från rest-API
 async function fetchRecipe() {
-console.log("fetchrecipe körs!");
+
 APIError.innerHTML = ""; //rensa tidigare felmeddelanden
 
     try {
@@ -51,17 +51,23 @@ APIError.innerHTML = ""; //rensa tidigare felmeddelanden
         }
         return data;
     } catch (error) {
-        APIError.innerHTML = `${error.message}`;
-        console.log(error);
+        APIError.innerHTML = `${error.message}`; //lägger till felmeddelande i DOM
+        //console.log(error);
     }
 }
 
-async function showRecipe() {
+async function showRecipe() { //funktion för att visa receptet som hittades på sidan
 
     recipeSection.innerHTML =""; //rensa inför nästa sökning
 
-    let data = await fetchRecipe();
+    let data = await fetchRecipe(); //inväntar att vi hittar ett recept
     
+if (data === undefined ) {  //förhindra felmeddelande i konsollen om inget recept hittades
+    console.log("Kör inte resten av koden om inget recept hittades");
+    return;
+}
+
+
     data.recipes.forEach(recipe => {
 
         //skapar tom lista för ingredienser
