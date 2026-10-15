@@ -56,8 +56,13 @@ async function fetchRecipe() {
 
         return data;
     } catch (error) {
+        if (error.message === "Något gick fel vid inhämtning av data. Försök igen senare") { //Skriver ut olika felmeddelanden, beroende på vad som hänt
         APIError.innerHTML = `${error.message}`; //lägger till felmeddelande i DOM
-        console.log(error);
+        } else if (error.message === "Det fanns inga recept som matchade din sökning") {
+            APIError.innerHTML = `${error.message}`;
+        } else
+            APIError.innerHTML = "Någonting oväntat gick fel. Försök igen senare."; //oväntade fel
+        console.log(error); //loggas i konsollen
     }
 }
 
